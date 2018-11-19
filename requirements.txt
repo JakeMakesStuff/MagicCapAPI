@@ -1,0 +1,6 @@
+flask
+pluginbase
+requests
+pynamodb
+zappa
+
