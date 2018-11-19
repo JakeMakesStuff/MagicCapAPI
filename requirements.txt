@@ -3,4 +3,3 @@ pluginbase
 requests
 pynamodb
 zappa
-
