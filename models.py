@@ -3,7 +3,7 @@
 
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
-from pynamodb.attributes import UnicodeAttribute, NumberAttribute
+from pynamodb.attributes import UnicodeAttribute, NumberAttribute, JSONAttribute, ListAttribute, BooleanAttribute
 # Imports go here.
 
 
@@ -47,3 +47,55 @@ class TravisKeys(Model):
         write_capacity_units = 1
 
     key = UnicodeAttribute(hash_key=True)
+
+
+class IPHashTimestamps(Model):
+    """The timestamp that a IP address hash connected. This is used for ratelimiting."""
+    class Meta:
+        table_name = "magiccap_ip_hash_timestamps"
+        region = "eu-west-2"
+        read_capacity_units = 1
+        write_capacity_units = 1
+
+    ip_hash = UnicodeAttribute(hash_key=True)
+    timestamp = NumberAttribute()
+
+
+class UnvalidatedGlobalKeyRequests(Model):
+    """Global key requests that have not been validated yet."""
+    class Meta:
+        table_name = "magiccap_unvalidated_global_key_requests"
+        region = "eu-west-2"
+        read_capacity_units = 1
+        write_capacity_units = 1
+
+    key = UnicodeAttribute(hash_key=True)
+    data = JSONAttribute()
+
+
+class GlobalKeys(Model):
+    """Defines global keys (and those pending review)."""
+    class Meta:
+        table_name = "magiccap_global_keys"
+        region = "eu-west-2"
+        read_capacity_units = 3
+        write_capacity_units = 2
+
+    key = UnicodeAttribute(hash_key=True)
+    email = UnicodeAttribute()
+    scopes = ListAttribute()
+    publisher_name = UnicodeAttribute()
+    service_name = UnicodeAttribute()
+    reviewed = BooleanAttribute()
+
+
+class OneTimeKeys(Model):
+    """Defines one time keys."""
+    class Meta:
+        table_name = "magiccap_one_time_keys"
+        region = "eu-west-2"
+        read_capacity_units = 2
+        write_capacity_units = 1
+
+    key = UnicodeAttribute(hash_key=True)
+    global_key = UnicodeAttribute()

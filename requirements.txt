@@ -3,3 +3,4 @@ pluginbase
 requests
 pynamodb
 zappa
+boto3

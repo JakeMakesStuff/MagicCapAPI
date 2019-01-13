@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>E-mail Verification API</title>
+    </head>
+    <body>
+        {% if success %}
+        <h1>Success!</h1>
+        <p>You will be e-mailed when MagicCap administrators make their decision.</p>
+        {% else %}
+        <h1>Invalid Key</h1>
+        <p>The key given was Invalid.</p>
+        {% endif %}
+    </body>
+</html>
