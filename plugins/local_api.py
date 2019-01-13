@@ -221,7 +221,7 @@ def global_token_judgement():
 
     judgement_type = "APPROVED" if judgement else "DENIED"
 
-    body = f"Hi,\n\nYour global API key application for {service_name} has been {judgement_type}."
+    body = f"Hi,\n\nYour global API key application for {global_key_db.service_name} has been {judgement_type}."
     if judgement:
         body += f" Your key is below:\n\n{global_key_db.key}\n\nThanks,\nThe MagicCap Development Team"
         global_key_db.reviewed = True
