@@ -7,6 +7,11 @@
         "runtime": "python3.6",
         "s3_bucket": "api.magiccap.me",
         "certificate_arn": "arn:aws:acm:us-east-1:211974291535:certificate/c26760bb-e0b7-4312-b1ed-1d2414bff185",
-        "domain": "api.magiccap.me"
+        "domain": "api.magiccap.me",
+		"extra_permissions": [{
+            "Effect": "Allow",
+            "Action": ["ses:*"],
+            "Resource": "*"
+        }]
     }
 }
