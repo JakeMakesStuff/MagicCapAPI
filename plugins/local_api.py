@@ -127,7 +127,7 @@ def request_global_token():
 
         return err
 
-    ip_hash_timestamp_db.timestamp = current_time
+    ip_hash_timestamp_db.timestamp = current_time + 86400
     ip_hash_timestamp_db.save()
 
     return jsonify({
