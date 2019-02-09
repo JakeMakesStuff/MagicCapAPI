@@ -13,7 +13,7 @@ version = Blueprint("version", __name__, url_prefix="/version")
 def get_updates(release_id, beta):
     """Gets all updates that is avaliable for the user."""
     updates = []
-    current_id = release_id
+    current_id = release_id + 1
     while True:
         try:
             u = Version.get(current_id)
