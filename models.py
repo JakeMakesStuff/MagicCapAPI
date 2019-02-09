@@ -29,6 +29,7 @@ class Version(Model):
     version = UnicodeAttribute()
     version_index = VersionIndex()
     changelogs = UnicodeAttribute()
+    beta = BooleanAttribute(null=True)
 
 
 def get_version(version):

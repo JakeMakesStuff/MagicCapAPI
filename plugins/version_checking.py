@@ -10,38 +10,32 @@ version = Blueprint("version", __name__, url_prefix="/version")
 # The version blueprint.
 
 
-@version.route("/")
-def get_latest_version():
-    """Gets the link/latest version information."""
-    r = requests.get(
-        "https://api.github.com/repos/JakeMakesStuff/MagicCap/releases/latest"
-    )
-    r.raise_for_status()
-    j = r.json()
+def get_updates(release_id, beta):
+    """Gets all updates that is avaliable for the user."""
+    updates = []
+    current_id = release_id
+    while True:
+        try:
+            u = Version.get(current_id)
+            
+            if u.beta:
+                if beta:
+                    updates.append(u)
+            else:
+                updates.append(u)
 
-    response = {
-        "success": True,
-        "version": j['tag_name'][1:],
-        "changelog": j['body'],
-        "github_url": j['url'],
-        "releases": {
-            "linux": {}
-        }
-    }
+            current_id += 1
+        except Version.DoesNotExist:
+            break
 
-    for release in j['assets']:
-        if "mac" in release['name']:
-            response['releases']['mac'] = release['browser_download_url']
-        else:
-            file_format = release['name'].split(".").pop().lower()
-            response['releases']['linux'][file_format] = release['browser_download_url']
-
-    return jsonify(response)
+    return updates
 
 
 @version.route("/check/<current_version>")
 def check_version(current_version):
     """An API used by MagicCap to check if it is the latest version."""
+    beta_channel = request.args.get("beta", "false").lower() == "true"
+
     if current_version.startswith("v"):
         current_version = current_version.lstrip("v")
         if current_version == "":
@@ -62,9 +56,8 @@ def check_version(current_version):
         err.status_code = 400
         return err
 
-    try:
-        Version.get(version_db.release_id + 1)
-    except Version.DoesNotExist:
+    updates_since = get_updates(version_db.release_id, beta_channel)
+    if len(updates_since) == 0:
         return jsonify({
             "success": True,
             "updated": True
@@ -72,19 +65,10 @@ def check_version(current_version):
 
     changelogs = ""
 
-    last_model = None
-    latest = False
-
-    i = version_db.release_id + 1
-    while not latest:
-        try:
-            inbetween_release = Version.get(i)
-        except Version.DoesNotExist:
-            latest = True
-            break
+    for inbetween_release in updates_since:
         changelogs += inbetween_release.changelogs + "\n"
-        last_model = inbetween_release
-        i += 1
+
+    last_model = updates_since.pop()
 
     return jsonify({
         "success": True,

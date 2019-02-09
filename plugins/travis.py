@@ -37,7 +37,7 @@ def new_version(travis_api_key, tag):
     j = r.json()
 
     Version(
-        release_id=i, version=tag, changelogs=j['body']
+        release_id=i, version=tag, changelogs=j['body'], beta="b" in tag
     ).save()
 
     return "Release {} successfully saved to the database.".format(tag), 200
