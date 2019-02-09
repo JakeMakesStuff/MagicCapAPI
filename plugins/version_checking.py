@@ -1,5 +1,5 @@
 # This code is a part of MagicCap which is a MPL-2.0 licensed project.
-# Copyright (C) Jake Gealer <jake@gealer.email> 2018.
+# Copyright (C) Jake Gealer <jake@gealer.email> 2018-2019.
 
 from flask import Blueprint, jsonify, request
 from models import Version, get_version
@@ -8,6 +8,47 @@ import requests
 
 version = Blueprint("version", __name__, url_prefix="/version")
 # The version blueprint.
+
+
+@version.route("/latest")
+def latest_versions():
+    """Gets information about the latest MagicCap releases."""
+    latest_release = None
+    latest_beta = None
+
+    release_id = 0
+    while True:
+        try:
+            v = Version.get(release_id)
+            if v.beta:
+                latest_beta = v
+            else:
+                latest_release = v
+            release_id += 1
+        except Version.DoesNotExist:
+            break
+
+    beta_json = None
+    beta_newer = False
+    if latest_beta:
+        beta_json = {
+            "mac": "https://s3.magiccap.me/upgrades/v{}/magiccap-mac.dmg".format(latest_beta.version),
+            "linux": "https://s3.magiccap.me/upgrades/v{}/magiccap-linux.zip".format(latest_beta.version),
+            "changelogs": latest_beta.changelogs,
+            "version": latest_beta.version
+        }
+        beta_newer = latest_beta.release_id > latest_release.release_id
+
+    return jsonify({
+        "beta": beta_json,
+        "release": {
+            "mac": "https://s3.magiccap.me/upgrades/v{}/magiccap-mac.dmg".format(latest_release.version),
+            "linux": "https://s3.magiccap.me/upgrades/v{}/magiccap-linux.zip".format(latest_release.version),
+            "changelogs": latest_release.changelogs,
+            "version": latest_release.version
+        },
+        "is_beta_newer_than_release": beta_newer
+    })
 
 
 def get_updates(release_id, beta):
