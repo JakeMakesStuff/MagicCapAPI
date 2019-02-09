@@ -1,5 +1,5 @@
 language: python
 python: "3.6"
 script:
-  - echo "[default]\naws_access_key_id = $AWS_ACCESS_KEY_ID\naws_secret_access_key = $AWS_SECRET_ACCESS_KEY" > ~/.aws/credentials
+  - echo '[default]\\naws_access_key_id = $AWS_ACCESS_KEY_ID\\naws_secret_access_key = $AWS_SECRET_ACCESS_KEY' > ~/.aws/credentials
   - zappa update
