@@ -25,7 +25,7 @@ def new_version(travis_api_key, tag):
     while True:
         try:
             Version.get(i)
-            i += 1 
+            i += 1
         except Version.DoesNotExist:
             break
 
