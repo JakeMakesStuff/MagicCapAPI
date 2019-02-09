@@ -3,10 +3,14 @@
 
 from flask import Flask
 from pluginbase import PluginBase
+from flask_cors import CORS
 # Imports go here.
 
 app = Flask(__name__)
 # Defines the app.
+
+CORS(app)
+# Allows CORS.
 
 plugin_base = PluginBase(package="main.plugins")
 plugin_source = plugin_base.make_plugin_source(

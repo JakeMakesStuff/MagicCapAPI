@@ -4,3 +4,4 @@ requests
 pynamodb
 zappa
 boto3
+flask-cors
