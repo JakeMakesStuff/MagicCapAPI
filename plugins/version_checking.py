@@ -106,10 +106,13 @@ def check_version(current_version):
 
     changelogs = ""
 
-    for inbetween_release in updates_since:
-        changelogs += inbetween_release.changelogs + "\n"
-
     last_model = updates_since.pop()
+
+    for inbetween_release in updates_since:
+        if last_model.beta == inbetween_release.beta:
+            changelogs += inbetween_release.changelogs + "\n"
+
+    changelogs += last_model.changelogs + "\n"
 
     return jsonify({
         "success": True,
