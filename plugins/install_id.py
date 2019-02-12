@@ -22,7 +22,7 @@ def new_install_id(device_id):
             ip = request.headers['CF-Connecting-IP']
         except KeyError:
             ip = request.remote_addr
-        install_id_db = InstallID(install_id=str(uuid4()), device_id=device_id, hashed_ip=sha512(ip).hexdigest())
+        install_id_db = InstallID(install_id=str(uuid4()), device_id=device_id, hashed_ip=sha512(ip.encode()).hexdigest())
         install_id_db.save()
 
     return install_id_db.install_id, 200
