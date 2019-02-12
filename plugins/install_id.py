@@ -28,6 +28,25 @@ def new_install_id(device_id):
     return install_id_db.install_id, 200
 
 
+@install_id.route("/validate/<install_id>")
+def validate_install_id(install_id):
+    """Validates a install ID."""
+    try:
+        install_id_db = InstallID.get(install_id)
+    except InstallID.DoesNotExist:
+        err = jsonify({
+            "exists": False
+        })
+        err.status_code = 404
+
+        return err
+
+    return jsonify({
+        "exists": True,
+        "ip_hash_last_5": install_id_db.hashed_ip[-5:]
+    })
+
+
 def setup(app):
     app.register_blueprint(install_id, url_prefix="/install_id")
 # Sets up the API.
