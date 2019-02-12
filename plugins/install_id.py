@@ -28,11 +28,11 @@ def new_install_id(device_id):
     return install_id_db.install_id, 200
 
 
-@install_id.route("/validate/<install_id>")
-def validate_install_id(install_id):
+@install_id.route("/validate/<i_id>")
+def validate_install_id(i_id):
     """Validates a install ID."""
     try:
-        install_id_db = InstallID.get(install_id)
+        install_id_db = InstallID.get(i_id)
     except InstallID.DoesNotExist:
         err = jsonify({
             "exists": False
