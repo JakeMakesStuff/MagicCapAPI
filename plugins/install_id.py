@@ -29,5 +29,5 @@ def new_install_id(device_id):
 
 
 def setup(app):
-    app.register_blueprint(travis, url_prefix="/install_id")
+    app.register_blueprint(install_id, url_prefix="/install_id")
 # Sets up the API.
