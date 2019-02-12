@@ -100,3 +100,34 @@ class OneTimeKeys(Model):
 
     key = UnicodeAttribute(hash_key=True)
     global_key = UnicodeAttribute()
+
+
+class DeviceIDIndex(GlobalSecondaryIndex):
+    """The index used for querying the device ID."""
+    class Meta:
+        read_capacity_units = 2
+        write_capacity_units = 1
+        projection = AllProjection()
+
+    device_id = UnicodeAttribute(hash_key=True)
+
+
+class InstallID(Model):
+    """Defines install ID's."""
+    class Meta:
+        table_name = "magiccap_install_ids"
+        region = "eu-west-2"
+        read_capacity_units = 3
+        write_capacity_units = 3
+
+    install_id = UnicodeAttribute(hash_key=True)
+    device_id = UnicodeAttribute()
+    hashed_ip = UnicodeAttribute()
+    device_id_index = DeviceIDIndex()
+
+
+def get_device_id(device_id):
+    """Uses the index to get a device ID."""
+    for i in InstallID.device_id_index.query(device_id):
+        return i
+    raise InstallID.DoesNotExist

@@ -1,7 +1,7 @@
 # This code is a part of MagicCap which is a MPL-2.0 licensed project.
 # Copyright (C) Jake Gealer <jake@gealer.email> 2018-2019.
 
-from models import Version, TravisKeys, IPHashTimestamps, UnvalidatedGlobalKeyRequests, GlobalKeys, OneTimeKeys
+from models import Version, TravisKeys, IPHashTimestamps, UnvalidatedGlobalKeyRequests, GlobalKeys, OneTimeKeys, InstallID
 # Imports go here.
 
 
@@ -22,4 +22,7 @@ if not GlobalKeys.exists():
 
 if not OneTimeKeys.exists():
     OneTimeKeys.create_table()
+
+if not InstallID.exists():
+    InstallID.create_table()
 # Creates the tables if they do not exist.
